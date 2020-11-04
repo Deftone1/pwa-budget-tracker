@@ -6,21 +6,29 @@ request.onupgradeneeded = function (event) {
     db.createObjectStore("pending", {autoIncrement: true});
 };
 
-// FUNCTION TO SAVE RECORD OF TRANSACTION
+request.onsuccess = event => {
+    console.log("Success!");
+    // Checks online status of app
+    if (navigator.onLine) {
+        checkDatabase();
+    }
+};
+// Function to save record of transaction
 function saveRecord(record) {
-    // CREATE TRANSACTION ON DB
+    // Create transaction on DB
     let transaction = db.transaction(["pending"], "readwrite");
-    // ACCESSES OBJECT STORE
+    // Accesses object store
     let store = transaction.objectStore("pending");
+    // Adds record to object store
+    store.add(record);
 }
-
-// FUNCTION TO CHECK DATABASE (ONLINE OR OFFLINE) AND CLEAR STORE WHEN COMPLETED
+// Function to check database (online or offline) and clear store when completed
 function checkDatabase() {
-    // OPEN TRANSACTION ON PENDING DB
+    // Open transaction on pending DB
     let transaction = db.transaction(["pending"], "readwrite");
-    // ACCESSES OBJECT STORE
+    // Accesses object store
     let store = transaction.objectStore("pending");
-    // VARIABLE TO GET ALL RECORDS
+    // Variable created to get all records
     let getAll = store.getAll();
     getAll.onsuccess = function () {
         if (getAll.result.length > 0) {
@@ -34,11 +42,11 @@ function checkDatabase() {
             })
             .then(response => response.json())
             .then(() => {
-                // OPENS A TRANSACTION ON PENDING DB IF SUCCESSFUL
+                // Opens a transaction on pending DB if successful
                 const transaction = db.transaction(["pending"], "readwrite");
-                // ACCESSES OBJECT STORE
+                // Accesses object store
                 const store = transaction.objectStore("pending");
-                // CLEARS EVERYTHING IN STORE
+                // Clears everything in store
                 store.clear();
             });
         }
@@ -46,5 +54,5 @@ function checkDatabase() {
 
 
 }
-
+// Event Listener to check for app coming back online
 window.addEventListener("online", checkDatabase);
