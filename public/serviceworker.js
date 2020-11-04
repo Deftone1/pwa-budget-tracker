@@ -1,4 +1,5 @@
 console.log("Hello from your service worker!");
+console.log("Your service worker is working!")
 
 // All files below will be cached
 const FILES_TO_CACHE = [
@@ -20,3 +21,25 @@ const FILES_TO_CACHE = [
 ]
 
 const CACHE_NAME = "static-cache-v1", DATA_CACHE_NAME = "data-cache-v1";
+
+// Event listener for service worker installation
+self.addEventListener("install", function(event){
+    event.waitUntil(
+        caches.open(CACHE_NAME).then(cache => {
+            console.log("Success!");
+            return cache.addAll(FILES_TO_CACHE);
+        })
+    );
+
+    self.skipWaiting();
+});
+
+
+// Event listener for service worker activation
+self.addEventListener("activate", function(event){
+   event.waitUntil(
+       caches.keys().then(keyList => {
+           
+       })
+   )
+    );
