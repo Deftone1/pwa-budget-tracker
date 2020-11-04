@@ -1,4 +1,4 @@
-let db;
+const db;
 var request = indexedDB.open("budget", 1);
 
 request.onupgradeneeded = function (event) {
@@ -8,7 +8,9 @@ request.onupgradeneeded = function (event) {
 
 // FUNCTION TO SAVE RECORD OF TRANSACTION
 function saveRecord(record) {
+    // CREATE TRANSACTION ON DB
     let transaction = db.transaction(["pending"], "readwrite");
+    // ACCESSES OBJECT STORE
     let store = transaction.objectStore("pending");
 }
 
